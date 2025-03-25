@@ -1,0 +1,420 @@
+/* Reset de estilos para garantir consistência entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Definições gerais do corpo da página */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333333;
+    line-height: 1.6;
+}
+
+/* Estilização do cabeçalho */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+/* Tamanho da logo */
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+/* Navegação principal */
+nav {
+    position: relative;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    background-color: #008C45;
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+
+/* Estilização da lista de navegação */
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+    margin: 0;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Estilização dos links do menu */
+nav a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    display: block;
+    position: relative;
+}
+
+/* Animação no hover do menu */
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: #FFD700;
+    transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+    width: 70%;
+}
+
+nav a:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+    transform: translateY(-2px);
+}
+
+/* Espaçamento principal */
+main {
+    margin-top: 130px;
+    padding: 20px;
+}
+
+/* Título das seções */
+.section-title {
+    text-align: center;
+    margin: 3rem 0;
+    color: #008C45;
+    font-size: 2.5rem;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: #FFD700;
+    margin: 1rem auto;
+    border-radius: 2px;
+}
+
+/* Grid de layout para os itens do menu */
+.menu-grid {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+/* Estilização dos cards de menu */
+article {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+article:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Imagens dos produtos */
+article img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+article h2 {
+    color: #008C45;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+article p {
+    margin-bottom: 1rem;
+}
+
+/* Estilização do preço */
+.preco {
+    color: #008C45;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
+
+.sobremesas-container {
+    display: grid;
+    gap: 2rem;
+}
+
+.sobremesa-item {
+    background-color: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.sobremesa-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+figure {
+    width: 100%;
+    margin: 0;
+}
+
+figure img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+figcaption {
+    text-align: center;
+    padding: 1rem;
+    font-weight: 600;
+    color: #008C45;
+    font-size: 1.2rem;
+}
+
+.sobremesa-info {
+    padding: 1.5rem;
+}
+
+/* Estilos para o rodapé */
+footer {
+    background-color: #008C45;
+    color: #ffffff;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+}
+
+/* Responsividade para telas médias */
+@media (min-width: 768px) {
+    nav ul {
+        flex-direction: row;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sobremesas-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    article img, figure img {
+        height: 350px;
+    }
+}
+
+/* Responsividade para telas grandes */
+@media (min-width: 1024px) {
+    .menu-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .sobremesas-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    article img, figure img {
+        height: 400px;
+    }
+
+    main {
+        padding: 0 2rem;
+    }
+}
+
+@media (min-width: 1440px) {
+    main {
+        padding: 0 3rem;
+    }
+
+    article img, figure img {
+        height: 450px;
+    }
+
+    .section-title {
+        font-size: 3rem;
+    }
+
+    article h2 {
+        font-size: 1.8rem;
+    }
+
+    article p {
+        font-size: 1.2rem;
+    }
+}
+
+/* Estilização do botão de menu mobile */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 15px;
+    z-index: 1001;
+}
+
+/* Estilização do ícone de hambúrguer */
+.hamburger {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #008c45;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background-color: #008c45;
+    transition: all 0.3s;
+    left: 0;
+}
+
+.hamburger::before {
+    top: -8px;
+}
+
+.hamburger::after {
+    bottom: -8px;
+}
+
+/* Efeito ao ativar o menu hambúrguer */
+.menu-toggle.active .hamburger {
+    background-color: transparent;
+}
+
+.menu-toggle.active .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menu-toggle.active .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+.nav-menu {
+    display: none;
+}
+
+/* Ajustes para navegação mobile */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    nav {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 70px);
+        background-color: #008C45;
+        transition: left 0.3s ease;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    nav.active {
+        left: 0;
+        display: block;
+    }
+
+    nav ul {
+        flex-direction: column;
+        padding: 2rem 0;
+        gap: 1rem;
+    }
+
+    nav li {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    nav a {
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-align: center;
+        background-color: rgba(255, 215, 0, 0.1);
+    }
+
+    nav a:hover {
+        background-color: rgba(255, 215, 0, 0.2);
+        transform: translateY(0);
+    }
+
+    body.menu-open::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+    }
+
+    main {
+        margin-top: 70px;
+    }
+}
+
+@media (min-width: 769px) {
+    .menu-toggle {
+        display: none;
+    }
+
+    nav {
+        display: block !important;
+    }
+
+    nav ul {
+        flex-direction: row;
+    }
+
+    nav li {
+        border: none;
+    }
+}
