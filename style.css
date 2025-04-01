@@ -344,17 +344,27 @@ footer {
 @media (max-width: 768px) {
     .menu-toggle {
         display: block;
+        padding: 10px;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     nav {
         position: fixed;
         top: 70px;
         left: -100%;
-        width: 80%;
+        width: 85%;
+        max-width: 300px;
         height: calc(100vh - 70px);
         background-color: #008C45;
         transition: left 0.3s ease;
         box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 1rem 0;
     }
 
     nav.active {
@@ -364,25 +374,35 @@ footer {
 
     nav ul {
         flex-direction: column;
-        padding: 2rem 0;
-        gap: 1rem;
+        padding: 0;
+        gap: 0.5rem;
     }
 
     nav li {
-        width: 90%;
-        margin: 0 auto;
+        width: 100%;
+        margin: 0;
     }
 
     nav a {
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        text-align: center;
+        padding: 1rem 1.5rem;
+        border-radius: 0;
+        text-align: left;
         background-color: rgba(255, 215, 0, 0.1);
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        transition: all 0.2s ease;
+    }
+
+    nav a:focus {
+        outline: 2px solid #FFD700;
+        outline-offset: -2px;
+        background-color: rgba(255, 215, 0, 0.2);
     }
 
     nav a:hover {
         background-color: rgba(255, 215, 0, 0.2);
-        transform: translateY(0);
+        transform: translateX(5px);
     }
 
     body.menu-open::after {
@@ -394,6 +414,93 @@ footer {
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 998;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    body.menu-open::after {
+        opacity: 1;
+    }
+
+    /* Melhorias na acessibilidade dos itens do menu */
+    .menu-item {
+        position: relative;
+    }
+
+    .menu-item:focus-within {
+        outline: 2px solid #008C45;
+        outline-offset: 4px;
+    }
+
+    .adicionar-carrinho {
+        width: 100%;
+        padding: 0.8rem;
+        background-color: #008C45;
+        color: #FFD700;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-height: 44px;
+    }
+
+    .adicionar-carrinho:focus {
+        outline: 2px solid #FFD700;
+        outline-offset: 2px;
+    }
+
+    .adicionar-carrinho:hover {
+        background-color: #006633;
+        transform: translateY(-2px);
+    }
+
+    .alergeno-tag {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        background-color: #f0f0f0;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin: 0.2rem;
+        color: #666;
+    }
+
+    /* Melhorias no carrinho */
+    .carrinho-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .carrinho-btn:focus {
+        outline: 2px solid #FFD700;
+        outline-offset: 2px;
+    }
+
+    .carrinho-conteudo {
+        padding: 1.5rem;
+    }
+
+    .carrinho-item {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .remover-item {
+        padding: 0.5rem 1rem;
+        background-color: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 36px;
+    }
+
+    .remover-item:focus {
+        outline: 2px solid #cc0000;
+        outline-offset: 2px;
     }
 
     main {
@@ -416,5 +523,157 @@ footer {
 
     nav li {
         border: none;
+    }
+}
+
+/* Estilos para os filtros */
+.filtros {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 800px;
+}
+
+.filtro-btn {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid #008C45;
+    border-radius: 25px;
+    background: none;
+    color: #008C45;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filtro-btn:hover,
+.filtro-btn[aria-pressed="true"] {
+    background-color: #008C45;
+    color: #FFD700;
+}
+
+/* Estilos para o carrinho */
+.carrinho {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.carrinho-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #008C45;
+    border: none;
+    color: #FFD700;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.carrinho-btn:hover {
+    transform: scale(1.1);
+}
+
+.carrinho-contador {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #FFD700;
+    color: #008C45;
+    font-size: 0.8rem;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carrinho-conteudo {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 90%;
+    max-width: 400px;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    padding: 2rem;
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.carrinho-conteudo.active {
+    right: 0;
+}
+
+.carrinho-items {
+    flex: 1;
+    overflow-y: auto;
+    margin: 1rem 0;
+}
+
+.carrinho-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #008C45;
+    margin: 1rem 0;
+    padding-top: 1rem;
+    border-top: 2px solid #f0f0f0;
+}
+
+.fechar-carrinho {
+    padding: 0.8rem;
+    background-color: #008C45;
+    color: #FFD700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.fechar-carrinho:hover {
+    background-color: #006633;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-item, .sobremesa-item {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Lazy loading de imagens */
+.lazy-image {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+}
+
+/* Responsividade para o carrinho */
+@media (max-width: 768px) {
+    .carrinho-conteudo {
+        width: 100%;
+    }
+    
+    .filtros {
+        padding: 0 1rem;
     }
 }

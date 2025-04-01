@@ -1,55 +1,259 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.menu-toggle'); // Botão do menu hamburguer
-    const nav = document.querySelector('nav'); // Elemento de navegação
-    const body = document.body; // Corpo do documento
+// Componentes
+const Componentes = {
+    // Template para um item do menu
+    menuItem: (produto) => `
+        <article class="menu-item" role="article">
+            <img 
+                src="${produto.imagem}" 
+                alt="${produto.nome}"
+                class="lazy-image"
+                loading="lazy"
+                onload="this.classList.add('loaded')"
+            >
+            <h2>${produto.nome}</h2>
+            <p>${produto.descricao}</p>
+            <div class="produto-info">
+                <p class="preco" aria-label="Preço: ${produto.preco.toFixed(2)} reais">
+                    R$ ${produto.preco.toFixed(2)}
+                </p>
+                <p class="calorias" aria-label="${produto.calorias} calorias">
+                    ${produto.calorias} kcal
+                </p>
+            </div>
+            <div class="alergenos" role="list" aria-label="Alergenos presentes">
+                ${produto.alergenos.map(alergeno => 
+                    `<span class="alergeno-tag" role="listitem" aria-label="Contém ${alergeno}">${alergeno}</span>`
+                ).join('')}
+            </div>
+            <button 
+                class="adicionar-carrinho"
+                aria-label="Adicionar ${produto.nome} ao carrinho"
+                data-produto-id="${produto.id}"
+            >
+                Adicionar ao Carrinho
+            </button>
+        </article>
+    `,
 
-    // Função para fechar o menu
-    function closeMenu() {
-        nav.classList.remove('active'); // Remove a classe 'active' da navegação
-        menuToggle.classList.remove('active'); // Remove a classe 'active' do botão
-        body.classList.remove('menu-open'); // Remove a classe do corpo da página
-        setTimeout(() => {
-            body.style.overflow = ''; // Restaura o scroll do corpo
-        }, 300);
+    // Template para um item do carrinho
+    carrinhoItem: (produto) => `
+        <div class="carrinho-item" role="listitem">
+            <h4>${produto.nome}</h4>
+            <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
+            <button 
+                class="remover-item"
+                aria-label="Remover ${produto.nome} do carrinho"
+                data-produto-id="${produto.id}"
+            >
+                Remover
+            </button>
+        </div>
+    `
+};
+
+// Estado da aplicação
+const Estado = {
+    carrinho: [],
+    filtroAtual: 'todos',
+    
+    // Getters
+    get totalCarrinho() {
+        return this.carrinho.reduce((total, item) => total + item.preco, 0);
+    },
+    
+    get quantidadeCarrinho() {
+        return this.carrinho.length;
     }
+};
 
-    // Evento de clique no botão de menu
-    menuToggle.addEventListener('click', function(e) {
-        e.stopPropagation(); // Impede que o clique se propague para outros elementos
-        nav.classList.toggle('active'); // Alterna a classe 'active' na navegação
-        menuToggle.classList.toggle('active'); // Alterna a classe 'active' no botão
-        body.classList.toggle('menu-open'); // Alterna a classe no corpo
+// Utilitários
+const Utils = {
+    // Debounce para otimizar eventos
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+
+    // Formatação de preço
+    formatarPreco(preco) {
+        return preco.toFixed(2).replace('.', ',');
+    },
+
+    // Lazy loading de imagens
+    lazyLoadImages() {
+        const images = document.querySelectorAll('.lazy-image');
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        images.forEach(img => imageObserver.observe(img));
+    }
+};
+
+// Gerenciador de eventos
+const Eventos = {
+    init() {
+        // Menu mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav');
         
-        if (body.classList.contains('menu-open')) {
-            body.style.overflow = 'hidden'; // Impede a rolagem da página ao abrir o menu
-        } else {
-            setTimeout(() => {
-                body.style.overflow = ''; // Restaura a rolagem ao fechar o menu
-            }, 300);
-        }
-    });
-
-    // Fecha o menu ao clicar em um link dentro dele
-    document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', closeMenu);
-    });
-
-    // Fecha o menu automaticamente ao redimensionar a tela para um tamanho maior que 768px
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            closeMenu();
-        }
-    });
-
-    // Fecha o menu ao clicar fora dele (apenas em telas menores que 768px)
-    document.addEventListener('click', function(event) {
-        if (window.innerWidth <= 768) { // Só executa em dispositivos móveis
-            const isClickInsideNav = nav.contains(event.target);
-            const isClickOnToggle = menuToggle.contains(event.target);
+        menuToggle.addEventListener('click', () => {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
             
-            if (!isClickInsideNav && !isClickOnToggle && nav.classList.contains('active')) {
-                closeMenu();
+            // Foca no primeiro item do menu quando aberto
+            if (!isExpanded) {
+                setTimeout(() => {
+                    const primeiroItem = nav.querySelector('a');
+                    if (primeiroItem) primeiroItem.focus();
+                }, 300);
             }
+        });
+
+        // Navegação por teclado no menu mobile
+        nav.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                menuToggle.click();
+            }
+        });
+
+        // Filtros
+        const filtros = document.querySelectorAll('.filtro-btn');
+        filtros.forEach(filtro => {
+            filtro.addEventListener('click', () => {
+                filtros.forEach(f => f.setAttribute('aria-pressed', 'false'));
+                filtro.setAttribute('aria-pressed', 'true');
+                Estado.filtroAtual = filtro.dataset.categoria;
+                this.atualizarProdutos();
+            });
+        });
+
+        // Carrinho
+        const carrinhoBtn = document.querySelector('.carrinho-btn');
+        const carrinhoConteudo = document.querySelector('.carrinho-conteudo');
+        const fecharCarrinho = document.querySelector('.fechar-carrinho');
+
+        carrinhoBtn.addEventListener('click', () => {
+            carrinhoConteudo.classList.add('active');
+            carrinhoConteudo.setAttribute('aria-hidden', 'false');
+        });
+
+        fecharCarrinho.addEventListener('click', () => {
+            carrinhoConteudo.classList.remove('active');
+            carrinhoConteudo.setAttribute('aria-hidden', 'true');
+        });
+
+        // Delegação de eventos para botões de adicionar/remover do carrinho
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('adicionar-carrinho')) {
+                const produtoId = parseInt(e.target.dataset.produtoId);
+                this.adicionarAoCarrinho(produtoId);
+            } else if (e.target.classList.contains('remover-item')) {
+                const produtoId = parseInt(e.target.dataset.produtoId);
+                this.removerDoCarrinho(produtoId);
+            }
+        });
+
+        // Redimensionamento da janela
+        window.addEventListener('resize', Utils.debounce(() => {
+            if (window.innerWidth > 768) {
+                nav.classList.remove('active');
+                menuToggle.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            }
+        }, 250));
+
+        // Renderização inicial
+        this.atualizarProdutos();
+        this.atualizarSobremesas();
+        this.atualizarCarrinho();
+    },
+
+    // Atualização dos produtos baseado no filtro
+    atualizarProdutos() {
+        const container = document.getElementById('subs-container');
+        const produtosFiltrados = produtos.subs.filter(produto => {
+            if (Estado.filtroAtual === 'todos') return true;
+            if (Estado.filtroAtual === 'sem-gluten') return !produto.alergenos.includes('glúten');
+            return produto.categoria === Estado.filtroAtual;
+        });
+
+        container.innerHTML = produtosFiltrados
+            .map(produto => Componentes.menuItem(produto))
+            .join('');
+
+        Utils.lazyLoadImages();
+    },
+
+    // Atualização das sobremesas
+    atualizarSobremesas() {
+        const container = document.getElementById('sobremesas-container');
+        container.innerHTML = produtos.sobremesas
+            .map(produto => Componentes.menuItem(produto))
+            .join('');
+
+        Utils.lazyLoadImages();
+    },
+
+    // Gerenciamento do carrinho
+    adicionarAoCarrinho(produtoId) {
+        const produto = [...produtos.subs, ...produtos.sobremesas]
+            .find(p => p.id === produtoId);
+        
+        if (produto) {
+            Estado.carrinho.push(produto);
+            this.atualizarCarrinho();
         }
-    });
+    },
+
+    removerDoCarrinho(produtoId) {
+        const index = Estado.carrinho.findIndex(item => item.id === produtoId);
+        if (index > -1) {
+            Estado.carrinho.splice(index, 1);
+            this.atualizarCarrinho();
+        }
+    },
+
+    atualizarCarrinho() {
+        const carrinhoItems = document.querySelector('.carrinho-items');
+        const carrinhoContador = document.querySelector('.carrinho-contador');
+        const carrinhoTotal = document.querySelector('.carrinho-total');
+
+        carrinhoItems.innerHTML = Estado.carrinho
+            .map(produto => Componentes.carrinhoItem(produto))
+            .join('');
+
+        carrinhoContador.textContent = Estado.quantidadeCarrinho;
+        carrinhoTotal.textContent = `Total: R$ ${Utils.formatarPreco(Estado.totalCarrinho)}`;
+    }
+};
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    // Renderização inicial
+    Eventos.atualizarProdutos();
+    Eventos.atualizarCarrinho();
+    
+    // Inicialização de eventos
+    Eventos.init();
+    
+    // Inicialização do lazy loading
+    Utils.lazyLoadImages();
 });

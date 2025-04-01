@@ -9,88 +9,59 @@
 <body>
     <header role="banner"> <!-- Cabeçalho da página, contém o logo e o botão de menu -->
         <img src="logo subway.png" alt="Logo do Subway - Fresh Food" class="logo"> <!-- Logo da empresa -->
-        <button class="menu-toggle" aria-label="Abrir menu"> <!-- Botão para abrir o menu em telas menores -->
-            <span class="hamburger"></span>
+        <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-principal">
+            <span class="hamburger" aria-hidden="true"></span>
         </button>
     </header>
 
-    <nav role="navigation" aria-label="Menu principal"> <!-- Barra de navegação principal -->
-        <ul>
-            <li><a href="#subs" aria-label="Ir para seção Sub do Dia">Sub do Dia</a></li>
-            <li><a href="#saladas" aria-label="Ir para seção Saladas">Saladas</a></li>
-            <li><a href="#bebidas" aria-label="Ir para seção Bebidas">Bebidas</a></li>
-            <li><a href="#sobremesas" aria-label="Ir para seção Sobremesas">Sobremesas</a></li>
+    <nav id="menu-principal" role="navigation" aria-label="Menu principal"> <!-- Barra de navegação principal -->
+        <ul role="menu">
+            <li role="none"><a href="#subs" role="menuitem" aria-label="Ir para seção Sub do Dia">Sub do Dia</a></li>
+            <li role="none"><a href="#saladas" role="menuitem" aria-label="Ir para seção Saladas">Saladas</a></li>
+            <li role="none"><a href="#bebidas" role="menuitem" aria-label="Ir para seção Bebidas">Bebidas</a></li>
+            <li role="none"><a href="#sobremesas" role="menuitem" aria-label="Ir para seção Sobremesas">Sobremesas</a></li>
         </ul>
     </nav>
 
     <main role="main"> <!-- Conteúdo principal da página -->
         <section id="subs" aria-labelledby="subs-title"> <!-- Seção dos sanduíches -->
-            <section class="menu-grid"> <!-- Grade para organizar os itens do menu -->
-                <article class="menu-item"> <!-- Item individual do menu -->
-                    <img src="sub frango.jpeg" alt="Sanduíche Sub de Frango com vegetais frescos em pão artesanal"> <!-- Imagem do produto -->
-                    <h2>Sub de Frango</h2> <!-- Nome do produto -->
-                    <p>Peito de frango temperado com suas verduras favoritas</p> <!-- Descrição do produto -->
-                    <p class="preco" aria-label="Preço: 25 reais e 90 centavos">R$ 25,90</p> <!-- Preço do produto -->
-                </article>
-
-                <article class="menu-item">
-                    <img src="sub carne.jpg" alt="Sanduíche Sub de Carne com queijo derretido e vegetais">
-                    <h2>Sub de Carne</h2>
-                    <p>Carne bovina suculenta com queijo e vegetais</p>
-                    <p class="preco" aria-label="Preço: 27 reais e 90 centavos">R$ 27,90</p>
-                </article>
-
-                <article class="menu-item">
-                    <img src="frango teriyaki.png" alt="Sanduíche Sub de Frango Teriyaki com molho especial e vegetais">
-                    <h2>Sub de Frango Teriyaki</h2>
-                    <p>Frango Teriyaki temperado com maionese e vegetais frescos</p>
-                    <p class="preco" aria-label="Preço: 23 reais e 90 centavos">R$ 23,90</p>
-                </article>
-            </section>
+            <h2 id="subs-title" class="section-title">Subs</h2>
+            <div class="filtros" role="group" aria-label="Filtros de produtos">
+                <button class="filtro-btn" data-categoria="todos" aria-pressed="true">Todos</button>
+                <button class="filtro-btn" data-categoria="carne">Carnes</button>
+                <button class="filtro-btn" data-categoria="vegetariano">Vegetariano</button>
+                <button class="filtro-btn" data-categoria="sem-gluten">Sem Glúten</button>
+            </div>
+            <div class="menu-grid" id="subs-container" role="grid">
+                <!-- Subs serão inseridos aqui via JavaScript -->
+            </div>
         </section>
 
         <section id="sobremesas" aria-labelledby="sobremesas-title"> <!-- Seção das sobremesas -->
             <h2 id="sobremesas-title" class="section-title">Sobremesas</h2>
-            <section class="sobremesas-container"> <!-- Container para os itens de sobremesa -->
-                <article class="sobremesa-item"> <!-- Item de sobremesa -->
-                    <figure>
-                        <img src="cookie.jpg" alt="Cookie com gotas de chocolate branco espalhadas uniformemente"> <!-- Imagem do produto -->
-                        <figcaption>Cookie de Chocolate</figcaption> <!-- Legenda da imagem -->
-                    </figure>
-                    <section class="sobremesa-info"> <!-- Informações da sobremesa -->
-                        <p>Delicioso cookie com gotas de chocolate branco</p>
-                        <p class="preco" aria-label="Preço: 5 reais e 90 centavos">R$ 5,90</p>
-                    </section>
-                </article>
-
-                <article class="sobremesa-item">
-                    <figure>
-                        <img src="cookie chocolate.jpg" alt="Cookie duplo chocolate com textura rica e aparência irresistível">
-                        <figcaption>Cookie Duplo Chocolate</figcaption>
-                    </figure>
-                    <section class="sobremesa-info">
-                        <p>Cookie com chocolate ao leite e meio amargo</p>
-                        <p class="preco" aria-label="Preço: 6 reais e 90 centavos">R$ 6,90</p>
-                    </section>
-                </article>
-
-                <article class="sobremesa-item">
-                    <figure>
-                        <img src="cookie baunilha.png" alt="Cookie de baunilha com gotas de chocolate espalhadas por toda superfície">
-                        <figcaption>Cookie Baunilha</figcaption>
-                    </figure>
-                    <section class="sobremesa-info">
-                        <p>Cookie de baunilha com gotas de chocolate</p>
-                        <p class="preco" aria-label="Preço: 5 reais e 90 centavos">R$ 5,90</p>
-                    </section>
-                </article>
-            </section>
+            <div class="sobremesas-container" id="sobremesas-container" role="grid">
+                <!-- Sobremesas serão inseridas aqui via JavaScript -->
+            </div>
         </section>
     </main>
+
+    <div id="carrinho" class="carrinho" role="region" aria-label="Carrinho de compras">
+        <button class="carrinho-btn" aria-label="Abrir carrinho">
+            <span class="carrinho-icon" aria-hidden="true">🛒</span>
+            <span class="carrinho-contador" aria-live="polite">0</span>
+        </button>
+        <div class="carrinho-conteudo" aria-hidden="true">
+            <h3>Carrinho</h3>
+            <div class="carrinho-items"></div>
+            <div class="carrinho-total"></div>
+            <button class="fechar-carrinho" aria-label="Fechar carrinho">Fechar</button>
+        </div>
+    </div>
 
     <footer role="contentinfo"> <!-- Rodapé da página -->
         <p>&copy; Subway 2025</p>
     </footer>
+    <script src="data.js"></script>
     <script src="script.js"></script> <!-- Importa o arquivo de script JavaScript -->
 </body>
 </html>
